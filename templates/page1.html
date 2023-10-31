@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 1</title>
+</head>
+<body>
+    <h1>Page 1</h1>
+    <p><a href="{{ url_for('home') }}">Go Home</a></p>
+    <p><a href="{{ url_for('page2') }}">Go to Page 2</a></p>
+    <h1>Upload Files</h1>
+    <form action="{{ url_for('upload_file_1') }}" method="post" enctype="multipart/form-data">
+      <h3>Upload Method 1</h3>
+      <p>Upload -> Save on Server -> Return Markdown file -> Return location of Markdown file on server.</p>
+      <input type="file" name="file">
+      <input type="submit" value="Upload">
+    </form>
+    <form action="http://127.0.0.1:5000/upload2" method="post" enctype="multipart/form-data">
+      <h3>Upload Method 2</h3>
+      <p>Upload -> Display Markdown file</p>
+      <input type="file" name="file">
+      <input type="submit" value="Upload">
+    </form>
+    <form action="http://127.0.0.1:5000/upload3" method="post" enctype="multipart/form-data">
+      <h3>Upload Method 3</h3>
+      <p>Upload -> Return .docx file</p>
+      <input type="file" name="file">
+      <input type="submit" value="Upload">
+    </form>
+</body>
+</html>

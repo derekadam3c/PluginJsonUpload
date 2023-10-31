@@ -1,11 +1,11 @@
-from flask import Flask, request, send_file, make_response, render_template, url_for, markup
+from flask import Flask, request, send_file, make_response, render_template, url_for
+from markupsafe import Markup
 import json
 from docx import Document
 import os
 from io import BytesIO
 import markdown2
-
-
+import markdown
 
 app = Flask(__name__)
 # markdown2.markdown(app)
@@ -30,18 +30,13 @@ UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-
-# @app.route('/upload1', methods=['POST'])
-# def upload_file_1():
-#     # Function implementation
-#     return 'Upload Method 1'
 @app.route('/upload1', methods=['GET', 'POST'])
 def upload_file_1():
     if request.method == 'POST':
         file = request.files['file']
         if file and file.filename.endswith('.json'):
             json_data = json.load(file)
+
             markdown_text = "# Table of JSON Data\n\n"
             markdown_text += "| Key | Value |\n"
             markdown_text += "|---|---|\n"
@@ -53,49 +48,13 @@ def upload_file_1():
             with open(output_filepath, 'w') as md_file:
                 md_file.write(markdown_text)
 
-            return render_template('display_markdown.html', markdown_content=markup(markdown_text))
-
-    return render_template('upload.html')
-# @app.route('/upload1', methods=['GET', 'POST'])
-# def upload_file_1():
-#     if request.method == 'POST':
-#         if 'file' not in request.files:
-#             return 'No file part'
-        
-#         file = request.files['file']
-#         if file.filename == '':
-#             return 'No selected file'
-
-#         if file and file.filename.endswith('.json'):
-#             try:
-#                 # Load JSON data from the uploaded file
-#                 json_data = json.load(file)
-                
-#                 # Generate the markdown table
-#                 markdown_text = "# Table of JSON Data\n\n"
-#                 markdown_text += "| Key | Value |\n"
-#                 markdown_text += "|---|---|\n"
-#                 for key, value in json_data.items():
-#                     markdown_text += f"| {key} | {value} |\n"
-                
-#                 # Save the markdown text to a file
-#                 output_filename = 'output.md'
-#                 output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
-#                 with open(output_filepath, 'w') as md_file:
-#                     md_file.write(markdown_text)
+            # Convert Markdown to HTML - Needed markdown2 so we could specify table format
+            html_content = markdown2.markdown(markdown_text, extras=["tables"])
 
 
-#                 return render_template('display_markdown.html', markdown_content=markdown_text)
+            return render_template('display_markdown.html', html_content=Markup(html_content))
 
-
-#                 # # Return the path to the user
-#                 # return f"The markdown file has been saved to: {output_filepath}"
-
-#             except Exception as e:
-#                 return str(e)
-            
-#     return render_template('index.html')
-#     # return 'Invalid file format. Please upload a JSON file.'
+    # return render_template('upload.html')
 
 
 @app.route('/upload2', methods=['POST'])

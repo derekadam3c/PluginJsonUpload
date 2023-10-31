@@ -30,6 +30,7 @@ UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
 @app.route('/upload1', methods=['GET', 'POST'])
 def upload_file_1():
     if request.method == 'POST':
@@ -45,6 +46,7 @@ def upload_file_1():
             
             output_filename = 'output1.md'
             output_filepath = os.path.join(UPLOAD_FOLDER, output_filename)
+            absolute_filepath = os.path.abspath(output_filepath)
             with open(output_filepath, 'w') as md_file:
                 md_file.write(markdown_text)
 
@@ -52,7 +54,7 @@ def upload_file_1():
             html_content = markdown2.markdown(markdown_text, extras=["tables"])
 
 
-            return render_template('display_markdown.html', html_content=Markup(html_content))
+            return render_template('display_markdown.html', html_content=Markup(html_content), location=absolute_filepath)
 
     # return render_template('upload.html')
 

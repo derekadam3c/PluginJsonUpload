@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, make_response, render_template, url_for
+from flask import Flask, request, send_file, make_response, render_template, url_for, send_from_directory
 from markupsafe import Markup
 import json
 from docx import Document
@@ -26,9 +26,16 @@ def page2():
 # This method also outputs where the file was saved.
 
 # Define a directory to store uploaded files
+
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    # Ensure that the filename does not include the uploads/ prefix
+    filename = filename.replace('uploads/', '', 1)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 @app.route('/upload1', methods=['GET', 'POST'])
@@ -45,18 +52,20 @@ def upload_file_1():
                 markdown_text += f"| {key} | {value} |\n"
             
             output_filename = 'output1.md'
-            output_filepath = os.path.join(UPLOAD_FOLDER, output_filename)
-            absolute_filepath = os.path.abspath(output_filepath)
+            # output_filepath = os.path.join(UPLOAD_FOLDER, output_filename)
+            # output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+            # absolute_filepath = os.path.abspath(output_filepath)
+            output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+
             with open(output_filepath, 'w') as md_file:
                 md_file.write(markdown_text)
 
             # Convert Markdown to HTML - Needed markdown2 so we could specify table format
             html_content = markdown2.markdown(markdown_text, extras=["tables"])
 
+            return render_template('display_markdown.html', html_content=Markup(html_content), md_link=output_filename, location=output_filepath)
 
-            return render_template('display_markdown.html', html_content=Markup(html_content), location=absolute_filepath)
-
-    # return render_template('upload.html')
+    return render_template("display_markdown.html", content=None)
 
 
 @app.route('/upload2', methods=['POST'])

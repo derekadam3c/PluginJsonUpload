@@ -9,8 +9,14 @@
   <body>
     <h1>Markdown Content</h1>
     {{ html_content }}
+
+
+    {% if md_link %}
     <p>Saved to <a rel="stylesheet" type="text/css" href="{{ location }}"> {{ location }}</a></p>
-    
+    <h3>Download Markdown File</h3>
+    <a href="{{ url_for('uploaded_file', filename=md_link) }}"> Download {{ md_link }}</a>
+    {% endif %}
+
     <a href="{{ url_for('page1') }}">Go Back</a>
   </body>
 </html>

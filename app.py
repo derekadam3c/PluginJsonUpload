@@ -6,6 +6,7 @@ import os
 from io import BytesIO
 import markdown2
 import markdown
+from azhelper import az_storage_setup
 
 app = Flask(__name__)
 # markdown2.markdown(app)
@@ -31,10 +32,48 @@ UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
+
+@app.route('/azuploads', methods=['POST'])
+def az_upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and file.filename.endswith('.json'):
+            json_data = json.load(file)
+
+            markdown_text = "# Table of JSON Data\n\n"
+            markdown_text += "| Key | Value |\n"
+            markdown_text += "|---|---|\n"
+            for key, value in json_data.items():
+                markdown_text += f"| {key} | {value} |\n"
+            
+            output_filename = 'output1.md'
+            # output_filepath = os.path.join(UPLOAD_FOLDER, output_filename)
+            # output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+            # absolute_filepath = os.path.abspath(output_filepath)
+            output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+    
+
+            try:
+                az_storage_setup("data", output_filepath, output_filename)
+                return 'File uploaded successfully!'
+            except Exception as e:
+                return str(e), 500
+
+
+
+
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
     # Ensure that the filename does not include the uploads/ prefix
+
+    file = request.files['file']
+    if not file:
+        return 'No file uploaded', 400
+
     filename = filename.replace('uploads/', '', 1)
+    # az_storage_setup(local_file_path=filename)
+    az_storage_setup(local_file_path=file)
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
@@ -131,6 +170,7 @@ def upload_file_3():
             return str(e)
     
     return 'Invalid file format. Please upload a JSON file.'
+
 
 if __name__ == '__main__':
     app.run(debug=True)

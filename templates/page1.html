@@ -5,36 +5,64 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page 1</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ775iR6LgU1zRyjR40W0yjI5Na9B0JmIsE" crossorigin="anonymous">
+    <!-- Optional: Include the Bootstrap JavaScript and its dependencies (jQuery & Popper.js) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+abtDEsb3VDo1hc" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT4GfrTK9eKyZO4p6m3TZ6wSs6L92AKZjy32lC6wVDpDNQG8i0yUwUHTj7RiG" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3s+2LoRhF99Y5IT4nDHNc68Bl7cwZuY4Yf5vHOLj5GynRy+P8SylkU" crossorigin="anonymous"></script>
+    
 </head>
 <body>
-    <h1>Page 1</h1>
-    <p><a href="{{ url_for('home') }}">Go Home</a></p>
-    <p><a href="{{ url_for('page2') }}">Go to Page 2</a></p>
-    <h1>Upload Files</h1>
-    <form action="{{ url_for('upload_file_1') }}" method="post" enctype="multipart/form-data">
-      <h3>Upload Method 1</h3>
-      <p>Upload -> Save on Server -> Return Markdown file -> Return location of Markdown file on server.</p>
-      <input type="file" name="file">
-      <input type="submit" value="Upload">
-    </form>
-    <form action="{{ url_for('az_upload') }}" method="post" enctype="multipart/form-data">
-      <h3>Upload AZ 1</h3>
-      <p>Upload -> Save on Server -> Return Markdown file -> Return location of Markdown file on server.</p>
-      <input type="file" name="file">
-      <input type="submit" value="Upload">
-    </form>
-    <form action="http://127.0.0.1:5000/upload2" method="post" enctype="multipart/form-data">
-      <h3>Upload Method 2</h3>
-      <p>Upload -> Display Markdown file</p>
-      <input type="file" name="file">
-      <input type="submit" value="Upload">
-    </form>
-    <form action="http://127.0.0.1:5000/upload3" method="post" enctype="multipart/form-data">
-      <h3>Upload Method 3</h3>
-      <p>Upload -> Return .docx file</p>
-      <input type="file" name="file">
-      <input type="submit" value="Upload">
-    </form>
+  <div class="container mt-5">
+      <h1 class="mb-4">Page 1</h1>
 
+      <div class="mb-3">
+          <a class="btn btn-primary" href="{{ url_for('home') }}" role="button">Go Home</a>
+      </div>
+
+      <div class="mb-3">
+          <a class="btn btn-secondary" href="{{ url_for('page2') }}" role="button">Go to Page 2</a>
+      </div>
+
+      <h1 class="my-4">Upload Files</h1>
+
+      <form action="{{ url_for('upload_file_1') }}" method="post" enctype="multipart/form-data">
+          <h3>Upload Method 1</h3>
+          <p>Upload -> Save on Server -> Return Markdown file -> Return location of Markdown file on server.</p>
+          <div class="form-group">
+              <input type="file" class="form-control-file" name="file">
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+
+      <form action="{{ url_for('az_upload') }}" method="post" enctype="multipart/form-data" class="my-3">
+          <h3>Upload AZ 1</h3>
+          <p>Upload -> Save on Server -> Return Markdown file -> Return location of Markdown file on server.</p>
+          <div class="form-group">
+              <input type="file" class="form-control-file" name="file">
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+
+      <form action="http://127.0.0.1:5000/upload2" method="post" enctype="multipart/form-data" class="my-3">
+          <h3>Upload Method 2</h3>
+          <p>Upload -> Display Markdown file</p>
+          <div class="form-group">
+              <input type="file" class="form-control-file" name="file">
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+
+      <form action="http://127.0.0.1:5000/upload3" method="post" enctype="multipart/form-data" class="my-3">
+          <h3>Upload Method 3</h3>
+          <p>Upload -> Return .docx file</p>
+          <div class="form-group">
+              <input type="file" class="form-control-file" name="file">
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+  </div>
 </body>
+
 </html>

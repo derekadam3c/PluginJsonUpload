@@ -25,6 +25,8 @@ def az_storage_setup(container_name="data", local_file_path = "C:\\Users\\DerekA
         filename = local_file_path.split("\\")[-1]
         print("{0} uploaded successfully to {1}!".format(filename, blob_name))
 
+    return (filename, blob_name)
+
 def main():
     print("Running func az_storage_setup")
     az_storage_setup()

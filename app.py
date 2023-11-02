@@ -32,8 +32,6 @@ UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-
 @app.route('/azuploads', methods=['POST'])
 def az_upload():
     if request.method == 'POST':
@@ -55,25 +53,26 @@ def az_upload():
     
 
             try:
-                az_storage_setup("data", output_filepath, output_filename)
-                return 'File uploaded successfully!'
+                # Return the newly created filename guid from az_storage_setup helper
+                azresults = az_storage_setup("data", output_filepath, output_filename)
+                base_url = 'https://pluginpracticestorage.blob.core.windows.net/data/'
+                az_link = base_url + azresults[1]
+
+                return '{} uploaded successfully!'.format(az_link)
             except Exception as e:
                 return str(e), 500
-
-
-
 
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
     # Ensure that the filename does not include the uploads/ prefix
 
-    file = request.files['file']
-    if not file:
-        return 'No file uploaded', 400
+    # file = request.files['file']
+    # if not file:
+    #     return 'No file uploaded', 400
 
     filename = filename.replace('uploads/', '', 1)
     # az_storage_setup(local_file_path=filename)
-    az_storage_setup(local_file_path=file)
+    # az_storage_setup(local_file_path=file)
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
